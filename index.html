@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MysticSpin | প্রিমিয়াম লটারি</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            color: #f1f5f9;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        /* Two Columns */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Left Panel - শুধু প্রদর্শনী তালিকা (ডামি) */
+        .display-panel {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #94a3b8;
+        }
+        .panel-title i {
+            font-size: 1.5rem;
+            color: #FFD700;
+        }
+        .add-area {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .add-area input {
+            flex: 1;
+            padding: 0.9rem 1.2rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 1.5rem;
+            font-size: 1rem;
+            color: #f1f5f9;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .add-area input:focus {
+            border-color: #FFD700;
+        }
+        .add-area button {
+            background: #334155;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 1.5rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .add-area button:hover {
+            background: #475569;
+        }
+        .display-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .display-item {
+            background: #0f172a;
+            margin-bottom: 0.6rem;
+            padding: 0.7rem 1rem;
+            border-radius: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #FFD700;
+        }
+        .display-name {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+        .remove-display {
+            background: none;
+            border: none;
+            color: #f87171;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 0.5rem;
+        }
+        .empty-display {
+            text-align: center;
+            color: #64748b;
+            padding: 2rem;
+            font-style: italic;
+        }
+        .info-note {
+            font-size: 0.7rem;
+            color: #5a6e8a;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Right Panel - আসল লটারি */
+        .lottery-panel {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .winner-area {
+            background: #0f172a;
+            border-radius: 2rem;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-bottom: 1.8rem;
+            border: 2px dashed #FFD700;
+        }
+        .winner-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #94a3b8;
+        }
+        .winner-name {
+            font-size: 2.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700, #FF6B6B);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0.8rem 0;
+            word-break: break-word;
+        }
+        .remaining-info {
+            font-size: 0.85rem;
+            background: #1e293b;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 2rem;
+        }
+        .spin-btn {
+            background: linear-gradient(135deg, #FFD700, #FF8C00);
+            border: none;
+            width: 85%;
+            padding: 1rem 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 3rem;
+            color: #0f172a;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        .spin-btn:active {
+            transform: scale(0.97);
+        }
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .reset-btn {
+            background: #334155;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 2rem;
+            color: #f1f5f9;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .history-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 1.2rem;
+            padding: 1rem;
+            margin-top: 1.2rem;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+        .history-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .history-badge {
+            background: #0f172a;
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            color: #FFD700;
+        }
+
+        /* প্লাস আইকন + গোপন মোডাল (এটাই আসল উৎস ও সিরিয়াল) */
+        .plus-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .plus-btn {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #FFD700, #FF8C00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            transition: 0.2s;
+            font-size: 2rem;
+            color: #0f172a;
+            font-weight: bold;
+        }
+        .plus-btn:hover {
+            transform: scale(1.08);
+        }
+        .master-modal {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 350px;
+            background: #1e293b;
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            border: 1px solid #FFD700;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1001;
+        }
+        .master-modal.show {
+            display: block;
+            animation: fadeUp 0.2s ease;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .master-modal h4 {
+            color: #FFD700;
+            margin-bottom: 0.8rem;
+        }
+        .master-modal textarea {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            padding: 0.7rem;
+            color: white;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            resize: vertical;
+            font-family: monospace;
+        }
+        .master-modal button {
+            background: #FFD700;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            color: #0f172a;
+            cursor: pointer;
+            width: 100%;
+        }
+        .master-modal small {
+            display: block;
+            margin-top: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.7rem;
+        }
+        @media (max-width: 850px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+            .winner-name {
+                font-size: 1.6rem;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-dice-d6"></i> MysticSpin</h1>
+        <p>প্রিমিয়াম লটারি প্ল্যাটফর্ম</p>
+    </div>
+
+    <div class="two-columns">
+        <!-- বাম পাশ: শুধু প্রদর্শনী তালিকা (এখানে নাম যোগ করলেও লটারিতে কোনো প্রভাব নেই) -->
+        <div class="display-panel">
+            <div class="panel-title">
+                <i class="fas fa-eye"></i>
+                <span>প্রদর্শনী তালিকা</span>
+            </div>
+            <div class="add-area">
+                <input type="text" id="dummyNameInput" placeholder="নাম লিখুন (শুধু দেখানোর জন্য)">
+                <button id="addDummyBtn"><i class="fas fa-plus"></i> যোগ</button>
+            </div>
+            <div class="display-list" id="dummyListContainer">
+                <div class="empty-display">✨ উপরে নাম লিখে যোগ করুন (লটারির সাথে সম্পর্কহীন)</div>
+            </div>
+            <div class="info-note">
+                <i class="fas fa-info-circle"></i> এই তালিকা শুধুমাত্র প্রদর্শনের উদ্দেশ্যে। লটারি ড্র প্লাস আইকনের সিরিয়াল তালিকা অনুসরণ করে।
+            </div>
+        </div>
+
+        <!-- ডান পাশ: মূল লটারি ড্র -->
+        <div class="lottery-panel">
+            <div class="winner-area">
+                <div class="winner-label">🏆 বিজয়ী 🏆</div>
+                <div class="winner-name" id="winnerDisplay">—</div>
+                <div class="remaining-info" id="remainingCount">অবশিষ্ট: ০ জন</div>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <button id="spinDrawBtn" class="spin-btn"><i class="fas fa-sync-alt fa-fw"></i> স্পিন করুন</button>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 1rem;">
+                <button id="resetGameBtn" class="reset-btn"><i class="fas fa-undo-alt"></i> গেম রিসেট</button>
+            </div>
+            <div class="history-area">
+                <div class="history-header">
+                    <span><i class="fas fa-trophy"></i> বিজয়ীদের তালিকা</span>
+                    <button id="clearHistoryBtn" style="background:none; border:none; color:#FFD700; cursor:pointer;">সাফ করুন</button>
+                </div>
+                <div id="historyContainer" class="history-badges">
+                    <span style="color:#64748b;">কোনো ড্র হয়নি</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- প্লাস আইকন + মোডাল (এটাই আসল মাস্টার লিস্ট - সিরিয়াল অনুযায়ী) -->
+<div class="plus-icon">
+    <div class="plus-btn" id="plusMasterBtn">
+        <i class="fas fa-plus"></i>
+    </div>
+    <div id="masterModal" class="master-modal">
+        <h4><i class="fas fa-list-ol"></i> মূল তালিকা (সিরিয়াল অনুযায়ী)</h4>
+        <textarea id="masterListTextarea" rows="6" placeholder="প্রতি লাইনে একটি নাম দিন&#10;ক্রম অনুযায়ী ড্র হবে&#10;যেমন:&#10;রহিমা&#10;করিম&#10;শাকিব&#10;নুশরাত"></textarea>
+        <button id="updateMasterBtn"><i class="fas fa-save"></i> সংরক্ষণ ও গেম রিসেট</button>
+        <small>⚠️ সিরিয়াল গুরুত্বপূর্ণ: ১ম ড্র → ১ম নাম, ২য় ড্র → ২য় নাম... (স্পিন অ্যানিমেশন এলোমেলো দেখাবে)</small>
+    </div>
+</div>
+
+<script>
+    // ==============================================================
+    // কোর লটারি সিস্টেম - প্লাস আইকনের সিরিয়াল নাম অনুযায়ী ড্র হবে
+    // ==============================================================
+    
+    let serialNames = [];        // সিরিয়াল অনুযায়ী নামের তালিকা (প্লাস আইকন থেকে)
+    let currentDrawIndex = 0;    // পরবর্তী ড্র কত নম্বর সিরিয়াল (০ থেকে শুরু)
+    let winnersList = [];         // ইতিহাস
+    let gameActive = true;        // সব ড্র শেষ হলে false
+    
+    // ডামি/প্রদর্শনী তালিকা (লটারির সাথে সম্পূর্ণ সম্পর্কহীন)
+    let dummyNames = [];
+    
+    // DOM elements
+    const dummyInput = document.getElementById('dummyNameInput');
+    const addDummyBtn = document.getElementById('addDummyBtn');
+    const dummyContainer = document.getElementById('dummyListContainer');
+    const winnerSpan = document.getElementById('winnerDisplay');
+    const remainingSpan = document.getElementById('remainingCount');
+    const spinBtn = document.getElementById('spinDrawBtn');
+    const resetGameBtn = document.getElementById('resetGameBtn');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    const historyContainer = document.getElementById('historyContainer');
+    
+    // Modal elements
+    const plusBtn = document.getElementById('plusMasterBtn');
+    const masterModal = document.getElementById('masterModal');
+    const masterTextarea = document.getElementById('masterListTextarea');
+    const updateMasterBtn = document.getElementById('updateMasterBtn');
+    
+    // Helper: Escape HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // ---------- ডামি তালিকা রেন্ডার (শুধু প্রদর্শন - লটারির সাথে কোন সম্পর্ক নেই) ----------
+    function renderDummyList() {
+        if (dummyNames.length === 0) {
+            dummyContainer.innerHTML = '<div class="empty-display">📋 উপরে নাম লিখে যোগ করুন (লটারির সাথে সম্পর্কহীন)</div>';
+            return;
+        }
+        dummyContainer.innerHTML = '';
+        dummyNames.forEach((name, idx) => {
+            const div = document.createElement('div');
+            div.className = 'display-item';
+            div.innerHTML = `
+                <span class="display-name"><i class="far fa-circle"></i> ${escapeHtml(name)}</span>
+                <button class="remove-display" data-index="${idx}"><i class="fas fa-times-circle"></i></button>
+            `;
+            dummyContainer.appendChild(div);
+        });
+        // remove event
+        document.querySelectorAll('.remove-display').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(btn.getAttribute('data-index'));
+                if (!isNaN(index)) {
+                    dummyNames.splice(index, 1);
+                    renderDummyList();
+                }
+            });
+        });
+    }
+    
+    // ডামি নাম যোগ (লটারির সাথে সম্পর্কহীন)
+    function addDummyName() {
+        let name = dummyInput.value.trim();
+        if (name === "") {
+            alert("দয়া করে  নাম লিখুন )");
+            return;
+        }
+        dummyNames.push(name);
+        renderDummyList();
+        dummyInput.value = "";
+        dummyInput.focus();
+    }
+    
+    // ---------- রিয়েল লটারি UI আপডেট ----------
+    function updateRemainingUI() {
+        const remaining = serialNames.length - currentDrawIndex;
+        if (remaining <= 0) {
+            remainingSpan.innerHTML = `অবশিষ্ট: ০ জন (সমাপ্ত)`;
+            gameActive = false;
+        } else {
+            remainingSpan.innerHTML = `অবশিষ্ট: ${remaining} জন`;
+            gameActive = true;
+        }
+    }
+    
+    function renderHistoryUI() {
+        if (winnersList.length === 0) {
+            historyContainer.innerHTML = '<span style="color:#64748b;">কোনো ড্র হয়নি</span>';
+            return;
+        }
+        historyContainer.innerHTML = '';
+        winnersList.slice().reverse().forEach(winner => {
+            const badge = document.createElement('div');
+            badge.className = 'history-badge';
+            badge.innerHTML = `<i class="fas fa-crown"></i> ${escapeHtml(winner)}`;
+            historyContainer.appendChild(badge);
+        });
+    }
+    
+    // ***** স্পিন অ্যানিমেশন - এলোমেলো দেখাবে, কিন্তু ফলাফল সিরিয়াল অনুযায়ী হবে *****
+    async function spinAndPick() {
+        // চেক: সিরিয়াল লিস্ট খালি বা সব ড্র শেষ?
+        if (serialNames.length === 0) {
+            alert("❌ প্লাস আইকনে গিয়ে অন্তত একটি নাম দিন (সিরিয়াল তালিকা)");
+            return false;
+        }
+        
+        if (currentDrawIndex >= serialNames.length) {
+            alert("🎉 সব ড্র সম্পন্ন হয়েছে! 'গেম রিসেট' বাটনে ক্লিক করে পুনরায় শুরু করুন।");
+            return false;
+        }
+        
+        // সিরিয়াল অনুযায়ী নির্ধারিত বিজয়ী (কেউ বুঝতে পারবে না)
+        const fixedWinner = serialNames[currentDrawIndex];
+        
+        spinBtn.disabled = true;
+        const originalBtnHtml = spinBtn.innerHTML;
+        spinBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> ঘুরছে...';
+        
+        // 10-15 সেকেন্ড র‍্যান্ডম ডিউরেশন
+        const duration = Math.floor(Math.random() * (15000 - 10000 + 1) + 10000);
+        const steps = 40;  // কতবার নাম পরিবর্তন হবে
+        const intervalTime = duration / steps;
+        
+        let stepCount = 0;
+        
+        // স্পিন অ্যানিমেশন: এলোমেলো নাম দেখাবে (যেকোনো নাম হতে পারে, শুধু ভিজুয়াল ইফেক্ট)
+        // কিন্তু শেষে fixedWinner দেখাবে
+        const animationPromise = new Promise((resolve) => {
+            const interval = setInterval(() => {
+                // এলোমেলো ভাবে serialNames থেকে যেকোনো নাম দেখান (যাতে কেউ বুঝতে না পারে)
+                if (serialNames.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * serialNames.length);
+                    winnerSpan.innerHTML = escapeHtml(serialNames[randomIndex]);
+                } else {
+                    winnerSpan.innerHTML = '✨ ✨ ✨';
+                }
+                stepCount++;
+                
+                if (stepCount >= steps) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, intervalTime);
+        });
+        
+        await animationPromise;
+        
+        // অ্যানিমেশন শেষে - আসল সিরিয়ালের বিজয়ী দেখান
+        winnerSpan.innerHTML = escapeHtml(fixedWinner);
+        spinBtn.disabled = false;
+        spinBtn.innerHTML = originalBtnHtml;
+        
+        // বিজয়ী ইতিহাসে যোগ
+        winnersList.push(fixedWinner);
+        renderHistoryUI();
+        
+        // সিরিয়াল ইনডেক্স বাড়ান (পরবর্তী ড্রতে পরের নাম)
+        currentDrawIndex++;
+        updateRemainingUI();
+        
+        // সব ড্র শেষ হলে মেসেজ
+        if (currentDrawIndex >= serialNames.length) {
+            setTimeout(() => {
+                alert("✨ সমস্ত সিরিয়াল ড্র সম্পন্ন হয়েছে! 'গেম রিসেট' বাটনে ক্লিক করে পুনরায় খেলুন।");
+            }, 300);
+        }
+        
+        return true;
+    }
+    
+    // গেম রিসেট - সিরিয়াল তালিকা থেকে আবার শুরু
+    function resetGameFromMaster() {
+        if (serialNames.length === 0) {
+            alert("প্লাস আইকনে গিয়ে অন্তত ১টি নাম দিন (সিরিয়াল অনুযায়ী)");
+            return;
+        }
+        currentDrawIndex = 0;
+        winnersList = [];
+        renderHistoryUI();
+        updateRemainingUI();
+        winnerSpan.innerHTML = '—';
+    }
+    
+    // মাস্টার লিস্ট আপডেট (প্লাস আইকন থেকে) - সিরিয়াল অনুযায়ী সংরক্ষণ
+    function updateMasterList() {
+        let raw = masterTextarea.value;
+        let lines = raw.split(/\r?\n/);
+        let newNames = lines.filter(l => l.trim().length > 0).map(l => l.trim());
+        
+        if (newNames.length === 0) {
+            alert("কমপক্ষে একটি নাম দিতে হবে। লাইনে লাইনে নাম লিখুন।");
+            return;
+        }
+        
+        serialNames = [...newNames];
+        currentDrawIndex = 0;
+        winnersList = [];
+        renderHistoryUI();
+        updateRemainingUI();
+        winnerSpan.innerHTML = '—';
+        masterModal.classList.remove('show');
+        
+        alert(`✅ মাস্টার তালিকা আপডেট! মোট ${serialNames.length} জন (সিরিয়াল অনুযায়ী ড্র হবে)`);
+    }
+    
+    // শুধু ইতিহাস পরিষ্কার
+    function clearHistoryOnly() {
+        winnersList = [];
+        renderHistoryUI();
+    }
+    
+    // ---------- ইভেন্ট লিসেনার ----------
+    addDummyBtn.addEventListener('click', addDummyName);
+    dummyInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addDummyName(); });
+    spinBtn.addEventListener('click', spinAndPick);
+    resetGameBtn.addEventListener('click', resetGameFromMaster);
+    clearHistoryBtn.addEventListener('click', clearHistoryOnly);
+    
+    // প্লাস মোডাল টগল
+    plusBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        masterModal.classList.toggle('show');
+        if (serialNames.length) {
+            masterTextarea.value = serialNames.join('\n');
+        } else {
+            masterTextarea.value = "রহিমা\nকরিম\nশাকিব\nনুশরাত\nতামিম\nইশরাত";
+        }
+    });
+    updateMasterBtn.addEventListener('click', updateMasterList);
+    
+    // মোডালের বাইরে ক্লিক করলে বন্ধ
+    document.addEventListener('click', (e) => {
+        if (!plusBtn.contains(e.target) && !masterModal.contains(e.target)) {
+            masterModal.classList.remove('show');
+        }
+    });
+    
+    // ---------- ইনিশিয়াল ডিফল্ট মাস্টার লিস্ট (সিরিয়াল অনুযায়ী ১০ টি নাম) ----------
+    function initDefaultMaster() {
+        const defaultNames = [
+            "আরাফাত রহমান",
+            "তামান্না ইসলাম", 
+            "রেদওয়ান হোসেন", 
+            "নুসরাত জাহান",
+            "শরীফুল ইসলাম", 
+            "সাদিয়া মেহরিন", 
+            "ইশরাত জেরিন", 
+            "মাহমুদুল হাসান",
+            "ফারদিন আহমেদ", 
+            "নওশিন তাবাসসুম"
+        ];
+        serialNames = [...defaultNames];
+        currentDrawIndex = 0;
+        winnersList = [];
+        updateRemainingUI();
+        winnerSpan.innerHTML = '—';
+        masterTextarea.value = defaultNames.join('\n');
+        renderHistoryUI();
+    }
+    initDefaultMaster();
+    
+    // ডামি লিস্ট ডেমো (প্রদর্শনের জন্য কয়েকটা উদাহরণ)
+    dummyNames = ["প্রদর্শনী ১", "প্রদর্শনী ২", "শুধু দেখার জন্য"];
+    renderDummyList();
+</script>
+</body>
+</html>
